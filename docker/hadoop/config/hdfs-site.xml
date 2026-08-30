@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<configuration>
+
+    <property>
+        <name>dfs.replication</name>
+        <value>3</value>
+    </property>
+
+    <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>file:///tmp/hadoop-root/dfs/name</value>
+    </property>
+
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>file:///tmp/hadoop-root/dfs/data</value>
+    </property>
+
+</configuration>

@@ -1,0 +1,21 @@
+FROM python:3.11-slim
+
+# Cài các thư viện hệ thống cần thiết (build tools cho một số package Python)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Cài các thư viện Python phổ biến cho data analytics + kết nối HDFS
+# hdfs: thư viện Python thuần, giao tiếp HDFS qua WebHDFS API (không cần cài Hadoop)
+RUN pip install --no-cache-dir \
+    pandas \
+    numpy \
+    pyarrow \
+    hdfs \
+    matplotlib \
+    jupyterlab
+
+CMD ["bash"]

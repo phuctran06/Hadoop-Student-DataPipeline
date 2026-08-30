@@ -1,0 +1,122 @@
+services:
+
+  namenode:
+    image: apache/hadoop:3
+    container_name: namenode
+    hostname: namenode
+    user: "0:0"
+    command: ["hdfs", "namenode"]
+
+    environment:
+      ENSURE_NAMENODE_DIR: /tmp/hadoop-root/dfs/name
+
+    ports:
+      - "9870:9870"
+      - "9000:9000"
+
+    volumes:
+      - namenode_data:/tmp/hadoop-root/dfs/name
+
+      - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro
+      - ./config/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml:ro
+
+    networks:
+      - hadoop
+
+
+  datanode1:
+    image: apache/hadoop:3
+    container_name: datanode1
+    hostname: datanode1
+    user: "0:0"
+    command: ["hdfs", "datanode"]
+
+    depends_on:
+      - namenode
+
+    volumes:
+      - datanode1_data:/tmp/hadoop-root/dfs/data
+
+      - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro
+      - ./config/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml:ro
+
+    networks:
+      - hadoop
+
+
+  datanode2:
+    image: apache/hadoop:3
+    container_name: datanode2
+    hostname: datanode2
+    user: "0:0"
+    command: ["hdfs", "datanode"]
+
+    depends_on:
+      - namenode
+
+    volumes:
+      - datanode2_data:/tmp/hadoop-root/dfs/data
+
+      - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro
+      - ./config/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml:ro
+
+    networks:
+      - hadoop
+
+
+  datanode3:
+    image: apache/hadoop:3
+    container_name: datanode3
+    hostname: datanode3
+    user: "0:0"
+    command: ["hdfs", "datanode"]
+
+    depends_on:
+      - namenode
+
+    volumes:
+      - datanode3_data:/tmp/hadoop-root/dfs/data
+
+      - ./config/core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml:ro
+      - ./config/hdfs-site.xml:/opt/hadoop/etc/hadoop/hdfs-site.xml:ro
+
+    networks:
+      - hadoop
+
+
+  # --- Container Python để chạy script phân tích dữ liệu, kết nối HDFS qua WebHDFS ---
+  python-client:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    container_name: python-client
+    hostname: python-client
+    tty: true          # giữ container sống để bạn "docker exec -it" vào chạy lệnh
+    stdin_open: true
+
+    depends_on:
+      - namenode
+
+    ports:
+      - "8888:8888"     # nếu sau này muốn mở Jupyter Lab
+
+    volumes:
+      # Mount thư mục data và src từ máy Windows vào container
+      # Sửa lại đường dẫn cho khớp với cấu trúc project thật của bạn
+      - ../../data:/app/data
+      - ../../src:/app/src
+
+    networks:
+      - hadoop
+
+
+networks:
+  hadoop:
+    driver: bridge
+
+
+volumes:
+  namenode_data:
+  datanode1_data:
+  datanode2_data:
+  datanode3_data:
