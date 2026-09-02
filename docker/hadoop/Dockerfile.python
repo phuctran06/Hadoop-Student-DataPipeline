@@ -16,6 +16,7 @@ RUN pip install --no-cache-dir \
     pyarrow \
     hdfs \
     matplotlib \
-    jupyterlab
+    jupyterlab \
+    streamlit
 
 CMD ["bash"]

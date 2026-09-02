@@ -99,6 +99,7 @@ services:
 
     ports:
       - "8888:8888"     # nếu sau này muốn mở Jupyter Lab
+      - "8501:8501"     # Streamlit UI
 
     volumes:
       # Mount thư mục data và src từ máy Windows vào container
